@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CBZ Tome | Assembleur manga</title>
+	<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+	<main class="shell">
+		<header class="hero">
+			<p class="eyebrow">Compileur de chapitres CBZ</p>
+			<h1>Assembler des CBZ</h1>
+			<p class="intro">Déposez vos chapitres dans le bon ordre, puis exportez un seul fichier.</p>
+		</header>
+
+		<section class="workspace" aria-labelledby="chapters-title">
+			<div class="toolbar">
+				<div>
+					<h2 id="chapters-title">Chapitres du tome</h2>
+					<p id="chapter-count" class="muted">Aucun chapitre sélectionné</p>
+				</div>
+				<div class="actions">
+					<button id="add-button" class="button button-secondary" type="button">+ Ajouter des CBZ</button>
+					<button id="merge-button" class="button button-primary" type="button" disabled>Fusionner le tome →</button>
+				</div>
+			</div>
+
+			<input id="file-input" type="file" accept=".cbz,application/zip" multiple hidden>
+			<div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-label="Déposer des fichiers CBZ ou les sélectionner">
+				<span class="drop-icon" aria-hidden="true">+</span>
+				<strong>Déposez vos chapitres ici</strong>
+				<span>ou cliquez pour parcourir vos fichiers `.cbz`</span>
+			</div>
+
+			<div id="empty-state" class="empty-state">
+				<span class="empty-number">01</span>
+				<p>Les chapitres ajoutés apparaîtront ici.<br>Vous pourrez ensuite les déplacer pour corriger l’ordre.</p>
+			</div>
+			<ol id="chapter-list" class="chapter-list" aria-live="polite"></ol>
+
+			<div class="export-row">
+				<label for="output-name">Nom du tome</label>
+				<div class="name-field">
+					<input id="output-name" type="text" value="tome" maxlength="80" spellcheck="false">
+					<span>.cbz</span>
+				</div>
+			</div>
+			<p id="status" class="status" role="status"></p>
+		</section>
+
+		<footer>Tout est traité en local. Aucun fichier n’est envoyé sur internet ni stocké sur un serveur.
+            <br> tout droit reservés © 2026 <a href="#">Mon Site</a>
+        </footer>
+	</main>
+	<script src="assets/js/scriptsJS.js"></script>
+</body>
+</html>
