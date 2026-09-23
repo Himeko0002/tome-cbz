@@ -1,40 +1,21 @@
-# CBZ Tome
+# Convertisseur CBZ
 
-Assembleur de chapitres CBZ pour créer facilement un tome de manga ou de bande dessinée.
+## À quoi ça sert
 
-Le projet fonctionne directement dans le navigateur, sans serveur et sans envoyer les fichiers sur internet.
+Cet outil permet de regrouper plusieurs fichiers `.cbz` en un seul tome, ou de convertir les images WEBP d'un CBZ en PNG pour les liseuses qui ne prennent pas en charge le format WEBP.
 
-## Fonctionnalités
+## Informations
 
-- Ajout de plusieurs fichiers `.cbz`
-- Glisser-déposer des chapitres
-- Réorganisation des chapitres dans le bon ordre
-- Lecture des pages JPG, JPEG, PNG, WEBP, GIF, BMP et AVIF
-- Fusion des pages dans un nouveau fichier `.cbz`
-- Renumérotation automatique des pages
-- Téléchargement du tome final
-- Traitement local des fichiers
-
-## Utilisation
-
-1. Ouvrir `index.html` dans un navigateur récent.
-2. Ajouter les chapitres CBZ avec le bouton prévu ou par glisser-déposer.
-3. Déplacer les chapitres pour corriger leur ordre.
-4. Choisir le nom du tome.
-5. Cliquer sur **Fusionner le tome**.
-6. Le fichier `.cbz` est téléchargé automatiquement.
-
-
-## Compatibilité
-
-La fusion utilise les APIs natives du navigateur, notamment `DecompressionStream` pour lire les archives ZIP. Il est recommandé d'utiliser une version récente de Chrome, Edge, Firefox ou Safari.
-
-## Confidentialité
-
-Les fichiers CBZ restent sur l'appareil de l'utilisateur. Aucun fichier n'est envoyé vers un serveur.
+- Ajout des fichiers CBZ par sélection ou glisser-déposer.
+- Réorganisation des chapitres avant la fusion.
+- Pages prises en charge : JPG, JPEG, PNG, WEBP, GIF, BMP et AVIF.
+- Les pages sont automatiquement renumérotées dans le fichier final.
+- Le bouton **Fusionner le tome** crée un CBZ sans conversion.
+- Le bouton **WEBP → PNG** crée un fichier suffixé `-png.cbz`.
+- Les fichiers sont traités localement dans le navigateur.
+- Aucun fichier n'est envoyé sur internet.
+- Utiliser un navigateur récent, comme Chrome, Edge, Firefox ou Safari.
 
 ## Auteur
 
 Projet créé par **Himeko002**.
-
-- Twitter : [@KC_Oceane](https://twitter.com/KC_Oceane)
