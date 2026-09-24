@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>CBZ Tome | Assembleur manga</title>
-	<link rel="stylesheet" href="./styles.css">
+	<link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
 	<main class="shell">
@@ -23,6 +23,7 @@
 				<div class="actions">
 					<button id="add-button" class="button button-secondary" type="button">+ Ajouter des CBZ</button>
 					<button id="merge-button" class="button button-primary" type="button" disabled>Fusionner le tome →</button>
+					<button id="convert-button" class="button button-convert" type="button" disabled>WEBP → JPEG</button>
 				</div>
 			</div>
 
@@ -39,6 +40,12 @@
 			</div>
 			<ol id="chapter-list" class="chapter-list" aria-live="polite"></ol>
 
+			<fieldset class="conversion-options">
+				<legend>Sortie WEBP → JPEG</legend>
+				<label><input type="radio" name="conversion-mode" value="merge" checked> Fusionner en un seul CBZ</label>
+				<label><input type="radio" name="conversion-mode" value="separate"> Créer un CBZ par chapitre</label>
+			</fieldset>
+
 			<div class="export-row">
 				<label for="output-name">Nom du tome</label>
 				<div class="name-field">
@@ -53,6 +60,6 @@
             <br> tout droit reservés Himeko002© 2026 <a href="#">Mon Site</a>
         </footer>
 	</main>
-	<script src="./scriptsJS.js"></script>
+	<script src="assets/js/scriptsJS.js"></script>
 </body>
 </html>

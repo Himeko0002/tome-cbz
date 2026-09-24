@@ -1,6 +1,7 @@
 const fileInput = document.querySelector('#file-input');
 const addButton = document.querySelector('#add-button');
 const mergeButton = document.querySelector('#merge-button');
+const convertButton = document.querySelector('#convert-button');
 const dropZone = document.querySelector('#drop-zone');
 const chapterList = document.querySelector('#chapter-list');
 const emptyState = document.querySelector('#empty-state');
@@ -100,6 +101,43 @@ function createZip(entries) {
 	return new Blob([...localParts, ...centralParts, end], { type: 'application/vnd.comicbook+zip' });
 }
 
+function numberPages(pages) {
+	return pages.map((page, index) => ({
+		...page,
+		name: `${String(index + 1).padStart(5, '0')}${page.name.slice(page.name.lastIndexOf('.')).toLowerCase()}`
+	}));
+}
+
+function downloadBlob(blob, name) {
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement('a');
+	link.href = url;
+	link.download = name;
+	link.click();
+	URL.revokeObjectURL(url);
+}
+
+async function convertWebpToJpeg(page) {
+	if (!page.name.toLowerCase().endsWith('.webp')) return page;
+	const bitmap = await createImageBitmap(new Blob([page.data], { type: 'image/webp' }));
+	const canvas = document.createElement('canvas');
+	canvas.width = bitmap.width;
+	canvas.height = bitmap.height;
+	const context = canvas.getContext('2d');
+	context.fillStyle = '#fff';
+	context.fillRect(0, 0, canvas.width, canvas.height);
+	context.drawImage(bitmap, 0, 0);
+	bitmap.close();
+	const jpegBlob = await new Promise((resolve, reject) => {
+		canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error(`Conversion JPEG impossible pour ${page.name}.`)), 'image/jpeg', .92);
+	});
+	return {
+		...page,
+		name: page.name.replace(/\.webp$/i, '.jpg'),
+		data: new Uint8Array(await jpegBlob.arrayBuffer())
+	};
+}
+
 const sizeLabel = (bytes) => {
 	if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} Ko`;
 	return `${(bytes / 1024 / 1024).toFixed(1)} Mo`;
@@ -145,6 +183,7 @@ function render() {
 	emptyState.hidden = hasItems;
 	chapterCount.textContent = hasItems ? `${chapters.length} chapitre${chapters.length > 1 ? 's' : ''}` : 'Aucun chapitre sélectionné';
 	mergeButton.disabled = !hasItems;
+	convertButton.disabled = !hasItems;
 }
 
 function addFiles(fileList) {
@@ -169,17 +208,43 @@ mergeButton.addEventListener('click', async () => {
 	try {
 		const pages = [];
 		for (const chapter of chapters) pages.push(...await unzipImages(chapter));
-		const blob = createZip(pages.map((page, index) => ({ ...page, name: `${String(index + 1).padStart(5, '0')}${page.name.slice(page.name.lastIndexOf('.')).toLowerCase()}` })));
-		const url = URL.createObjectURL(blob);
-		const link = document.createElement('a');
-		link.href = url;
-		link.download = `${outputName.value.trim() || 'tome'}.cbz`;
-		link.click();
-		URL.revokeObjectURL(url);
+		const blob = createZip(numberPages(pages));
+		downloadBlob(blob, `${outputName.value.trim() || 'tome'}.cbz`);
 		setStatus('Le tome a été créé et téléchargé.', 'success');
 	} catch (error) {
 		setStatus(`Impossible de fusionner : ${error.message}`, 'error');
 	} finally {
+		mergeButton.disabled = chapters.length === 0;
+	}
+});
+
+convertButton.addEventListener('click', async () => {
+	convertButton.disabled = true;
+	mergeButton.disabled = true;
+	setStatus('Conversion des pages WEBP en JPEG…');
+	try {
+		const mode = document.querySelector('input[name="conversion-mode"]:checked').value;
+		if (mode === 'separate') {
+			for (const chapter of chapters) {
+				const pages = await unzipImages(chapter);
+				const convertedPages = [];
+				for (const page of pages) convertedPages.push(await convertWebpToJpeg(page));
+				const blob = createZip(numberPages(convertedPages));
+				downloadBlob(blob, `${chapter.name.replace(/\.cbz$/i, '')}-jpeg.cbz`);
+			}
+			setStatus(`${chapters.length} CBZ converti${chapters.length > 1 ? 's' : ''} en JPEG et téléchargé${chapters.length > 1 ? 's' : ''}.`, 'success');
+		} else {
+			const pages = [];
+			for (const chapter of chapters) pages.push(...await unzipImages(chapter));
+			const convertedPages = [];
+			for (const page of pages) convertedPages.push(await convertWebpToJpeg(page));
+			downloadBlob(createZip(numberPages(convertedPages)), `${outputName.value.trim() || 'tome'}-jpeg.cbz`);
+			setStatus('Le CBZ converti en JPEG a été créé et téléchargé.', 'success');
+		}
+	} catch (error) {
+		setStatus(`Impossible de convertir : ${error.message}`, 'error');
+	} finally {
+		convertButton.disabled = chapters.length === 0;
 		mergeButton.disabled = chapters.length === 0;
 	}
 });

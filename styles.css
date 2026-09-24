@@ -147,6 +147,8 @@ footer,
 .button-secondary { background: transparent; color: var(--ink); }
 .button-primary { background: var(--accent); color: #fff; }
 .button-primary:hover:not(:disabled) { background: var(--accent-dark); }
+.button-convert { border-color: var(--highlight); background: var(--highlight); color: var(--ink); }
+.button-convert:hover:not(:disabled) { background: #e6b719; }
 
 .drop-zone {
 	display: grid;
@@ -207,6 +209,29 @@ footer,
 }
 
 .chapter-list.has-items { display: block; }
+
+.conversion-options {
+	display: flex;
+	gap: 18px;
+	margin: 22px 0 0;
+	padding: 14px 16px;
+	border: 1px solid var(--line);
+}
+
+.conversion-options legend {
+	padding: 0 6px;
+	color: var(--muted);
+	font: 700 12px 'Arial Narrow', Arial, sans-serif;
+	letter-spacing: .08em;
+	text-transform: uppercase;
+}
+
+.conversion-options label {
+	color: var(--ink);
+	font: 14px 'Arial Narrow', Arial, sans-serif;
+}
+
+.conversion-options input { accent-color: var(--accent); }
 
 .chapter-row {
 	min-height: 68px;
@@ -307,6 +332,7 @@ footer a { color: var(--accent-dark); font-weight: 700; }
 	.actions,
 	.button { width: 100%; }
 	.chapter-size { display: none; }
+	.conversion-options { flex-direction: column; gap: 10px; }
 	.name-field { width: 100%; }
 	.name-field input { flex: 1; }
 }
